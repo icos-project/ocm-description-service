@@ -1,0 +1,77 @@
+# Default values for ocm-descriptor.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+global: {}
+
+replicaCount: 1
+
+image:
+  repository: harbor.res.eng.it/icos/meta-kernel/ocm-description-service
+
+nameOverride: ""
+fullnameOverride: ""
+
+configMap:
+  serverPort: 8083 # not needed
+  lighthouseBaseUrl: http://lighthouse.url/
+  matchmakingUrl: http://matchmaker-url/matchmake
+  keycloakPublicKey: keycloak-public-key
+  keycloakBaseUrl: "https://iam-url/"
+  keycloakRealm: "realm"
+  keycloakClientId: "client-id"
+  keycloakClientSecret: "secret" # should be safe
+  jobManagerUrl: http://jm-url/jobmanager # TODO change
+  deployManagerUrl: "http://localhost:8083/deploy-manager" # TODO change
+  deployManagerPullingInverval: "15"
+
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: "manifestwork-editor-service-account"
+
+podAnnotations: {}
+
+podSecurityContext: {}
+# fsGroup: 2000
+
+securityContext: {}
+# capabilities:
+#   drop:
+#   - ALL
+# readOnlyRootFilesystem: true
+# runAsNonRoot: true
+# runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 8083
+
+sidecar:
+  enabled: true
+  name: ocm-descriptor-sidecar
+  image:
+    repository: harbor.res.eng.it/icos/meta-kernel/ocm-descriptor-sidecar
+
+ingress:
+  enabled: false
+
+resources: {}
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
